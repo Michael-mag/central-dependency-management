@@ -31,4 +31,6 @@ Manage some common dependencies that I will need in various projects.
             <version>1.0</version>
         </parent>
    
-3. Now install your project: e.g run ```mvn clean install```   
+3. Now install your project: e.g run ```mvn clean install```  
+4. Additionally, you can add : ```central-dependency-management``` to your .
+   gitignore file if you do not want to check in this with your project code.
