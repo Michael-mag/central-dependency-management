@@ -7,7 +7,14 @@
     <groupId>com.michael.magaisa.central-dependencies</groupId>
     <artifactId>central-dependencies</artifactId>
     <version>1.0</version>
+    <packaging>pom</packaging>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
