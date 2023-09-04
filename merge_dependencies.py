@@ -56,7 +56,19 @@ source_build = source_root.find('.//ns0:build', namespaces)
 if source_build is not None:
     destination_build = destination_root.find('.//ns0:build', namespaces)
     if destination_build is not None:
-        destination_build.extend(source_build)
+        # Find the <plugins> section in both source and destination
+        source_plugins = source_build.find('.//ns0:plugins', namespaces)
+        destination_plugins = destination_build.find('.//ns0:plugins', namespaces)
+
+        if source_plugins is not None:
+            if destination_plugins is not None:
+                # Append individual <plugin> elements from source to destination
+                for source_plugin in source_plugins:
+                    destination_plugins.append(source_plugin)
+            else:
+                # If destination <plugins> doesn't exist, create it and append source <plugins>
+                destination_build.append(source_plugins)
+
 
 # Remove the 'ns0:' namespace prefix from all elements and attributes in the merged XML
 for elem in destination_root.iter():
