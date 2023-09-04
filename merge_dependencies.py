@@ -38,13 +38,9 @@ if source_dependencies is not None:
 # Merge <dependencyManagement> from source to destination
 source_dependency_management = source_root.find('.//ns0:dependencyManagement', namespaces)
 if source_dependency_management is not None:
-    destination_dependency_management = destination_root.find('.//ns0:dependencyManagement', namespaces)
-    if destination_dependency_management is not None:
-        # Append source dependencyManagement to the existing destination dependencyManagement if it exists
-        destination_dependency_management.extend(source_dependency_management)
-    else:
-        # If destination dependencyManagement doesn't exist, create it and append source dependencyManagement
-        destination_root.append(source_dependency_management)
+    destination_dependencies = destination_root.find('.//ns0:dependencies', namespaces)
+    if destination_dependencies is not None:
+        destination_root.insert(destination_root.index(destination_dependencies) + 1, source_dependency_management)
 
 # Merge <build> from source to destination
 source_build = source_root.find('.//ns0:build', namespaces)
