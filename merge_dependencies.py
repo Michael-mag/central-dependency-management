@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as ET
-
 import sys
 
 if len(sys.argv) != 3:
@@ -9,11 +8,11 @@ if len(sys.argv) != 3:
 source_pom_path = sys.argv[1]
 destination_pom_path = sys.argv[2]
 
-# Load the destination pom file
+# Load the destination POM file
 destination_tree = ET.parse(destination_pom_path)
 destination_root = destination_tree.getroot()
 
-# Load the source pom file
+# Load the source POM file
 source_tree = ET.parse(source_pom_path)
 source_root = source_tree.getroot()
 
@@ -36,6 +35,17 @@ if source_dependencies is not None:
             # If destination dependencies don't exist, create it and append source dependencies
             destination_dependency_management.append(source_dependencies)
 
+# Merge <dependencyManagement> from source to destination
+source_dependency_management = source_root.find('.//ns0:dependencyManagement', namespaces)
+if source_dependency_management is not None:
+    destination_dependency_management = destination_root.find('.//ns0:dependencyManagement', namespaces)
+    if destination_dependency_management is not None:
+        # Append source dependencyManagement to the existing destination dependencyManagement if it exists
+        destination_dependency_management.extend(source_dependency_management)
+    else:
+        # If destination dependencyManagement doesn't exist, create it and append source dependencyManagement
+        destination_root.append(source_dependency_management)
+
 # Merge <build> from source to destination
 source_build = source_root.find('.//ns0:build', namespaces)
 if source_build is not None:
@@ -52,7 +62,7 @@ for elem in destination_root.iter():
             new_key = key[len('{http://maven.apache.org/POM/4.0.0}'):]
             elem.attrib[new_key] = elem.attrib.pop(key)
 
-# Save the updated destination pom file
+# Save the updated destination POM file
 destination_tree.write('updated_destination_pom.xml', encoding='UTF-8', xml_declaration=True)
 
-print("Merging and cleanup completed. Updated pom saved as 'updated_destination_pom.xml'")
+print("Merging and cleanup completed. Updated POM saved as 'updated_destination_pom.xml'")
