@@ -1,11 +1,20 @@
 import xml.etree.ElementTree as ET
 
+import sys
+
+if len(sys.argv) != 3:
+    print("Usage: python merge_dependencies.py source_pom.xml destination_pom.xml")
+    sys.exit(1)
+
+source_pom_path = sys.argv[1]
+destination_pom_path = sys.argv[2]
+
 # Load the destination pom file
-destination_tree = ET.parse('destination_pom.xml')
+destination_tree = ET.parse(destination_pom_path)
 destination_root = destination_tree.getroot()
 
 # Load the source pom file
-source_tree = ET.parse('source_pom.xml')
+source_tree = ET.parse(source_pom_path)
 source_root = source_tree.getroot()
 
 # Define XML namespaces
