@@ -2,6 +2,33 @@ import xml.etree.ElementTree as ET
 import sys
 import shutil  # Import shutil for file backup
 
+
+def rearrange_xml(xml_file):
+    # Load the XML file
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+
+    # Find the 'dependencyManagement' and 'build' elements
+    dependency_management = None
+    build = None
+    for element in root:
+        if element.tag == 'dependencyManagement':
+            dependency_management = element
+        elif element.tag == 'build':
+            build = element
+
+    # Remove 'build' if found
+    if build is not None:
+        root.remove(build)
+
+    # Append 'build' after 'dependencyManagement' if both are found
+    if dependency_management is not None:
+        root.append(build)
+
+    # Save the modified XML back to the file
+    tree.write(xml_file, encoding='UTF-8', xml_declaration=True)
+
+
 if len(sys.argv) != 3:
     print("Usage: python merge_dependencies.py source_pom.xml destination_pom.xml")
     sys.exit(1)
@@ -81,5 +108,8 @@ for elem in destination_root.iter():
 
 # Save the updated destination POM file as "pom.xml"
 destination_tree.write(destination_pom_path, encoding='UTF-8', xml_declaration=True)
+
+# Rearrange the XML elements and save as "output_pom.xml"
+rearrange_xml(destination_pom_path)
 
 print("Merging and cleanup completed. Updated POM saved as 'pom.xml'")
